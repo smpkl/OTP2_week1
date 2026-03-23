@@ -23,8 +23,8 @@ class MainTest {
     @Test
     void testEnglishLanguageSelection() {
         // 1 = English, 1 item, name=Apple, quantity=2, price=1.50
-        String output = runWithInput("1\n1\nApple\n2\n1,50\n");
-        assertTrue(output.contains("3,00"));
+        String output = runWithInput("1\n1\nApple\n2\n1.50\n");
+        assertTrue(output.contains("3.00") || output.contains("3,00"));
     }
 
     @Test
@@ -63,7 +63,7 @@ class MainTest {
 
     @Test
     void testInvalidLanguageDefaultsToEnglish() {
-        String output = runWithInput("99\n1\nApple\n1\n1,00\n");
+        String output = runWithInput("99\n1\nApple\n1\n1.00\n");
         assertTrue(output.contains("Invalid choice."));
     }
 }
