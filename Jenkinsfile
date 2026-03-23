@@ -15,7 +15,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 // Run the tests first to generate data for Jacoco and JUnit
-                bat 'mvn clean test' // For Windows agents
+                bat 'mvn clean test install' // For Windows agents
             }
         }
         stage('Code Coverage') {
