@@ -1,32 +1,57 @@
+import java.io.PrintStream;
 import java.text.MessageFormat;
 import java.util.*;
 
 public class Main {
 
-    private static class Item {
-        public String name;
-        public int quantity;
-        public double price;
+    public static class Item {
+        private String name;
+        private int quantity;
+        private double price;
+
         public Item(String name) {
             this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
+        public int getQuantity() {
+            return this.quantity;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
         }
 
         public double getPrice() {
             return price;
         }
+
+        public double getTotalPrice() {
+            return this.quantity * this.price;
+        }
     }
 
     public static void main(String[] args) {
+        run(new Scanner(System.in), System.out);
+    }
+
+    public static void run(Scanner scanner, PrintStream out) {
         List<Item> list = new ArrayList<>();
 
 
-        System.out.println("Select a language: ");
-        System.out.println("1. English");
-        System.out.println("2. Suomi");
-        System.out.println("3. 日本語");
-        System.out.println("4. Svenska");
+        out.println("Select a language: ");
+        out.println("1. English");
+        out.println("2. Suomi");
+        out.println("3. 日本語");
+        out.println("4. Svenska");
 
-        Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
 
         // Set the locale based on user's choice
@@ -36,7 +61,7 @@ public class Main {
             case 3 -> new Locale("ja", "JP");
             case 4 -> new Locale("sv", "SE");
             default -> {
-                System.out.println("Invalid choice. Defaulting to English.");
+                out.println("Invalid choice. Defaulting to English.");
                 yield new Locale("en", "UK");
             }
         };
@@ -45,34 +70,38 @@ public class Main {
         ResourceBundle rb = ResourceBundle.getBundle("MessagesBundle", locale);
 
         // STRING: Input the number of items you want to purchase
-        System.out.println(rb.getString("prompt.item.count"));
+        out.println(rb.getString("prompt.item.count"));
         int numberOfItems = scanner.nextInt();
 
         for (int i = 1; i <= numberOfItems; i++) {
             // STRING: Input the name of the {0}. item
-            System.out.println(MessageFormat.format(rb.getString("prompt.item.name"), i));
+            out.println(MessageFormat.format(rb.getString("prompt.item.name"), i));
             String nameOfItem = scanner.next();
 
             Item item = new Item(nameOfItem);
 
             // STRING: Input the quantity of item ''{0}''
-            System.out.println(MessageFormat.format(rb.getString("prompt.item.quantity"), nameOfItem));
-            item.quantity = scanner.nextInt();
+            out.println(MessageFormat.format(rb.getString("prompt.item.quantity"), nameOfItem));
+            item.setQuantity(scanner.nextInt());
 
             // STRING: Input the price of item ''{0}''
-            System.out.println(MessageFormat.format(rb.getString("prompt.item.price"), nameOfItem));
-            item.price = scanner.nextDouble();
+            out.println(MessageFormat.format(rb.getString("prompt.item.price"), nameOfItem));
+            item.setPrice(scanner.nextDouble());
 
             list.add(item);
         }
 
         // Calculate total cost of items
-        double sum = list.stream()
-                .reduce(0.0, (total, item) -> total + item.getPrice(), Double::sum);
+        double total = calculateTotal(list);
 
         // STRING: Total cost of all items
-        System.out.println(rb.getString("prompt.item.total") + String.format("\n%.2f", sum));
+        out.println(rb.getString("prompt.item.total") + String.format("\n%.2f", total));
 
         scanner.close();
+    }
+
+    public static double calculateTotal(List<Item> items) {
+        return items.stream()
+                .reduce(0.0, (total, item) -> total + item.getTotalPrice(), Double::sum);
     }
 }
