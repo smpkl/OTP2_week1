@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/smpkl/OTP2_week1.git'
+                git branch:'main' url:'https://github.com/smpkl/OTP2_week1.git'
             }
         }
         stage('Run Tests') {
