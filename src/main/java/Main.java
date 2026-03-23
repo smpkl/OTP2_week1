@@ -68,6 +68,7 @@ public class Main {
 
         // Load the resource bundle for the selected locale
         ResourceBundle rb = ResourceBundle.getBundle("MessagesBundle", locale);
+        scanner.useLocale(locale);
 
         // STRING: Input the number of items you want to purchase
         out.println(rb.getString("prompt.item.count"));
